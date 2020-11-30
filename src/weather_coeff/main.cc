@@ -3,10 +3,15 @@
 #include <vector>
 #include <sstream>
 #include <string>
+#include <gtest/gtest.h>
+
 using namespace std;
 
 
 // need to define a function header here
+int barometricCoefficient(string beginDate, string endDate, vector<string>* dates, vector<string>* times, vector<int>* pressures) {
+    return 1;
+}
 
 
 int main() {
@@ -20,7 +25,7 @@ int main() {
     }
 
     string date, time;
-    float airTemp, barometricPress, dewPoint, relativeHumidity, windDir, windGust, windSpeed;
+    float airTemp, barometricPress, dewPoint, relativeHumidity, windDirection, windGust, windSpeed;
     
     string line;
     vector<float> barometrics;
@@ -33,7 +38,7 @@ int main() {
         stringstream ss (line);
         // test for returning the correct values and types
         ss >> date >> time;
-        ss >> airTemp >> barometricPress >> dewPoint >> relativeHumidity >> windDir >> windGust >> windSpeed;
+        ss >> airTemp >> barometricPress >> dewPoint >> relativeHumidity >> windDirection >> windGust >> windSpeed;
         barometrics.push_back(barometricPress);
     }
     

@@ -37,3 +37,8 @@ or stormy weather ahead (neg slope)
 2010 - 2012
 
 Initial tests I can provide
+
+- how to store dates and times,
+- some structure
+- heap, priority queue, trie
+- btree (sort by date and time), data is the rest
