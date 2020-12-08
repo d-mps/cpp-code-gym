@@ -20,64 +20,77 @@
 using namespace std;
 
 
-// grab selection of dates
-int * findDatesIndices(string beginDate, string endDate, const vector<string> &date) {
-    static int *indices[2];
+// This function can later be overloaded.
+int * getRangeIndexes(string beginDate, string endDate, const vector<string> & date) {
+    int beginIndex = -1;
+    int endIndex = -1;
+
+    for (int i=0; i < date.size(); i++) {  // O(N) time complexity, too slow! Binary search is faster O(Log(N))
+        if (beginIndex == -1 && date[i] == beginDate) {
+            beginIndex = i;
+        }
+
+        if (date[i] == endDate) {
+            endIndex = i;
+        }
+    }
+
+    static int indexes [2] = { beginIndex, endIndex };
+    return indexes;
 }
 
-
-// need to define a function header here
-int barometricCoefficient( const vector<string> &timestamp, int *baroptr) {
-    cout << baroptr << endl;
-    return 1;
+// Vector is passed by reference and cannot be changed by this function because of const.
+float slope(const vector<float> & data, int * range) {
+    float x, y, result;
+    x = data[*range++];
+    y = data[*range];
+    result =  y / x;
+    printf(" x= %f , y= %f\n", x, y);
+    return result;
 }
-// Vector is passed by reference and cannot be changed by this function.
-float baroTest(const vector<float> &vec) {
-    // for (int i=0; i < vec.size(); i++) {
-    //     cout << vec[i] << endl;
-    // }
-    // Rounding error here
-    float total;
-    total = accumulate(vec.begin(), vec.end(), 0);
-    return total;
-}
-
 
 int main() {
     // Read data from file.
     ifstream file ("../../data/weather/example.txt");
 
-    // TODO: test the file opens and does not fail and fails
+    // TODO: test file opens successfully and does not fail
     if (!file.is_open()) {
         cout << "Error: Hey, you couldn't open this file." << endl;
         exit(-2);
     }
 
+    // user insert begin and end timestamps
+    string beginDate = "2012_01_02";
+    string endDate = "2012_01_03";
+
     string date, time;
     float airTemp, barometricPress, dewPoint, relativeHumidity, windDirection, windGust, windSpeed;
-    
+
     string line;
     vector<float> barometrics;
+    vector<string> dates;
     
     // Ignore header
     getline(file, line);
     // test you indeed get the header file first
 
+    // Read in data from file
     while (getline(file, line)) {
         stringstream ss (line);
         // test for returning the correct values and types
         ss >> date >> time;
         ss >> airTemp >> barometricPress >> dewPoint >> relativeHumidity >> windDirection >> windGust >> windSpeed;
+
         barometrics.push_back(barometricPress);
-    }
-    
-    for (int i = 0; i < 4; i++) {
-        cout << i << " " << barometrics[i] << endl;
+        dates.push_back(date);
     }
 
-    float total;
-    total = baroTest(barometrics);
-    printf("Total %f\n", total);
+    float coeff;
+    int * range;
+    range = getRangeIndexes(beginDate, endDate, dates);
+    coeff = slope(barometrics, range);
+    printf("coeff = %f\n", coeff);
+ 
     file.close();
 
     return 0;
